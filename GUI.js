@@ -1,81 +1,99 @@
 'use strict';
 
 class GUI {
-
   constructor(webgl) {
-	this.webgl = webgl;
-        
+    this.webgl = webgl;
+
     var guiVars = {
-      "animation" : false,
-      "cleanScene" : () => {  
-        for (var i = 0; i < this.webgl.scene.children.length; )
-          this.webgl.scene.remove(this.webgl.scene.children[i]);  
-        },
-        "drawBox" : () => {  
-          for (var i = 0; i < this.webgl.scene.children.length; ){
-            this.webgl.scene.remove(this.webgl.scene.children[i]);  
-          };
-          var box = new MyBox(50,30,15,.2);
-          this.webgl.scene.add(box);
-        },
-
-        "drawRack" : () => {  
-          for (var i = 0; i < this.webgl.scene.children.length; ){
-            this.webgl.scene.remove(this.webgl.scene.children[i]);  
-          };
-          var rack = new MyRack();
-          this.webgl.scene.add(rack);
-        },
-
-      "drawWarehouse" : () => {  
-        for (var i = 0; i < this.webgl.scene.children.length; ){
-          this.webgl.scene.remove(this.webgl.scene.children[i]);  
-        };
+      switchCamera: () => {
+        if (this.webgl.camera instanceof THREE.PerspectiveCamera) {
+          this.webgl.camera = new THREE.OrthographicCamera(
+            window.innerWidth / -16,
+            window.innerWidth / 16,
+            window.innerHeight / 16,
+            window.innerHeight / -16,
+            -200,
+            500
+          );
+          this.webgl.camera.position.x = 120;
+          this.webgl.camera.position.y = 60;
+          this.webgl.camera.position.z = 180;
+          this.webgl.camera.lookAt(this.webgl.scene.position);
+          this.perspective = "Orthographic";
+        } else {
+          this.webgl.camera = new THREE.PerspectiveCamera(
+            45,
+            window.innerWidth / window.innerHeight,
+            0.1,
+            1000
+          );
+          this.webgl.camera.position.x = 120;
+          this.webgl.camera.position.y = 60;
+          this.webgl.camera.position.z = 180;
+          this.webgl.camera.lookAt(this.webgl.scene.position);
+          this.perspective = "Perspective";
+        }
+      },
+      animation: false,
+      cleanScene: () => {
+        while (this.webgl.scene.children.length > 0) {
+          this.webgl.scene.remove(this.webgl.scene.children[0]);
+        }
+      },
+      drawBox: () => {
+        guiVars.cleanScene();
+        var box = new MyBox(50, 30, 15, 0.2);
+        this.webgl.scene.add(box);
+      },
+      drawRack: () => {
+        guiVars.cleanScene();
+        var rack = new MyRack();
+        this.webgl.scene.add(rack);
+      },
+      drawWarehouse: () => {
         var warehouse = new Warehouse();
         this.webgl.scene.add(warehouse);
       },
-
-      "drawRobot": () => {
+      drawRobot: () => {
         var robot = new Robot(50, 50, 50);
         robot.translateX(150);
         robot.translateY(25);
         this.webgl.scene.add(robot);
         let direction = false;
-      
+
         const animate = () => {
           if (guiVars.animation) {
-            if(robot.position.z == 100){
-              
+            if (robot.position.z == 100) {
               direction = false;
             }
-            if(robot.position.z == -100){
+            if (robot.position.z == -100) {
               direction = true;
             }
-            if(direction == true){
+            if (direction == true) {
               robot.translateZ(1);
-            }else{
+            } else {
               robot.translateZ(-1);
             }
             this.webgl.render(this.webgl.scene, this.webgl.camera);
           }
           requestAnimationFrame(animate);
         };
-      
+
         animate();
       }
     };
-       
+
     var gui = new dat.GUI({ autoPlace: false });
 
-    var cleanScene = gui.add(guiVars, 'cleanScene');
-    var drawBox = gui.add(guiVars, 'drawBox');
-    var drawRack = gui.add(guiVars, 'drawRack');
-    var drawWarehouse = gui.add(guiVars, 'drawWarehouse');
-    var drawRobot = gui.add(guiVars, 'drawRobot');
-    var animation = gui.add(guiVars, "animation");
-    var customContainer = document.getElementById('GUI-output');
+    gui.add(guiVars, "cleanScene");
+    gui.add(guiVars, "drawBox");
+    gui.add(guiVars, "drawRack");
+    gui.add(guiVars, "drawWarehouse");
+    gui.add(guiVars, "drawRobot");
+    gui.add(guiVars, "animation");
+    gui.add(guiVars, "switchCamera");
+
+    var customContainer = document.getElementById("GUI-output");
     customContainer.appendChild(gui.domElement);
+  }
 }
-
-}
-
