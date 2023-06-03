@@ -3,7 +3,7 @@
 class Warehouse extends THREE.Group{
     constructor(){
         super();
-        var ground = MyBox.createMesh(new THREE.BoxGeometry(500,2,400))
+        var ground = Warehouse.createMesh(new THREE.BoxGeometry(500,2,400), "beton.jpg")
         ground.translateY(-10);
         ground.translateX(100);
         this.add(ground);
@@ -20,9 +20,16 @@ class Warehouse extends THREE.Group{
         this.add(rack3); 
 
 
-        const light = new THREE.AmbientLight(0x404040);
-        light.intensity = 5;
-        this.add(light);
+        const light = new THREE.AmbientLight( 0x404040 ); // soft white light
+        this.add( light );
+
     }
-  
+    static createMesh(geom,imageFile) {
+        var texture = THREE.ImageUtils.loadTexture("./material/" + imageFile);
+        var mat = new THREE.MeshPhongMaterial();
+        mat.map = texture;
+    
+        var mesh = new THREE.Mesh(geom, mat);
+        return mesh;
+      }
 }

@@ -9,7 +9,6 @@ class Webgl {
     this.scene = new THREE.Scene();        
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-    
     // create a render and set the size
     this.renderer = new THREE.WebGLRenderer({ antialias:true });
     this.renderer.setClearColorHex(0x252525);
@@ -41,7 +40,6 @@ class Webgl {
   render () {
     let delta = this.clock.getDelta();
     this.trackballControls.update(delta);
-    
     //render the scene
     this.renderer.render(this.scene, this.camera);
   }

@@ -44,6 +44,9 @@ class GUI {
         guiVars.cleanScene();
         var box = new MyBox(50, 30, 15, 0.2);
         this.webgl.scene.add(box);
+        
+        const light = new THREE.AmbientLight( 0x404040 ); // soft white light
+        this.scene.add( light );
       },
       drawRack: () => {
         guiVars.cleanScene();

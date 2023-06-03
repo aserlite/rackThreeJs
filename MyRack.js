@@ -15,11 +15,12 @@ class MyRack extends THREE.Group{
         stage3.rotateZ(-25);
         this.add(stage3); 
         
-        var spotlight = new THREE.SpotLight(0xffffff, .1);
+        var spotlight = new THREE.SpotLight(0xffffff, 1);
         spotlight.position.set( 0, 200, 0 );
         spotlight.lookAt(0,0,0);
         spotlight.castShadow=true;
         this.add( spotlight );
+
     }
   
 }
